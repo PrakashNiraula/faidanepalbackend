@@ -53,7 +53,18 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
 
+
+
+                $this->routes(function () {
+                    Route::middleware('web')
+                        ->namespace($this->namespace)
+                        ->group(base_path('routes/install.php'));
+                });
+
             Route::prefix('admin')
+
+
+
                 ->middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/admin.php'));
@@ -74,6 +85,17 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/api/v2/api.php'));
 
         });
+
+
+
+
+
+
+        // $this->routes(function () {
+        //     Route::middleware('web')
+        //         ->namespace($this->namespace)
+        //         ->group(base_path('routes/update.php'));
+        // });
     }
 
     /**

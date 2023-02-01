@@ -764,4 +764,45 @@ class ItemController extends Controller
         }
     }
 
+    // duplicate item
+    public function duplicate($id){
+        $information = Item::findorfail($id)->replicate()->save();
+        Toastr::success('Item Duplicated Successfully!!');
+
+        return redirect()->back();
+    }
+
+
+    public function bulkDelete(Request $request){
+
+        $rules = [
+            'item_id'=>'required'
+        ];
+
+
+        $request->validate($rules);
+
+
+      $informations =  Item::withoutGlobalScope(StoreScope::class)->withoutGlobalScope('translate')
+                        ->whereIn('id',$request->item_id)->get();
+
+
+
+    //   $product = Item::withoutGlobalScope(StoreScope::class)->withoutGlobalScope('translate')->find($request->id);
+
+    foreach ($informations as $key => $value) {
+
+      if ($value->image) {
+          if (Storage::disk('public')->exists('product/' . $value['image'])) {
+              Storage::disk('public')->delete('product/' . $value['image']);
+          }
+      }
+      $value->translations()->delete();
+      $value->delete();
+
+    }
+      Toastr::success(translate('messages.product_deleted_successfully'));
+        return redirect()->back();
+    }
+
 }
