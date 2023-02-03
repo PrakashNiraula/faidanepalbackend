@@ -228,10 +228,14 @@ class BusinessSettingsController extends Controller
 
     public function payment_update(Request $request, $name)
     {
+
         if (env('APP_MODE') == 'demo') {
             Toastr::info(translate('messages.update_option_is_disable_for_demo'));
             return back();
         }
+
+
+
         if ($name == 'cash_on_delivery') {
             $payment = BusinessSetting::where('key', 'cash_on_delivery')->first();
             if (isset($payment) == false) {
@@ -252,7 +256,70 @@ class BusinessSettingsController extends Controller
                     'updated_at' => now(),
                 ]);
             }
-        } elseif ($name == 'digital_payment') {
+
+
+        }elseif ($name == 'esewa') {
+
+                // dd($request->all());
+                // dd($name);
+                    $payment = BusinessSetting::where('key', 'esewa')->first();
+                    if (isset($payment) == false) {
+                        DB::table('business_settings')->insert([
+                            'key'        => 'esewa',
+                            'value'      => json_encode([
+                                'status'           => 1,
+                                'key' => $request->key,
+                                'secret'    => $request->secret,
+                            ]),
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }else{
+
+                        DB::table('business_settings')->where('key','esewa')->update([
+                            'key'        => 'esewa',
+                            'value'      => json_encode([
+                                'status'           => 1,
+                                'key' => $request->key,
+                                'secret'    => $request->secret,
+                            ]),
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+
+                    }
+        }elseif($name=='khalti'){
+//  dd($request->all());
+//                 dd($name);
+
+            $payment = BusinessSetting::where('key', 'khalti')->first();
+            if (isset($payment) == false) {
+                DB::table('business_settings')->insert([
+                    'key'        => 'khalti',
+                    'value'      => json_encode([
+                        'status'           => 1,
+                        'publicKey' => $request->publicKey,
+                    ]),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }else{
+                DB::table('business_settings')->where(['key' => 'khalti'])->update([
+                    'key'        => 'khalti',
+                    'value'      => json_encode([
+                        'status'           => 1,
+                        'publicKey' => $request->publicKey,
+                    ]),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+        }
+
+
+
+        elseif ($name == 'digital_payment') {
             $payment = BusinessSetting::where('key', 'digital_payment')->first();
             if (isset($payment) == false) {
                 DB::table('business_settings')->insert([
@@ -272,6 +339,8 @@ class BusinessSettingsController extends Controller
                     'updated_at' => now(),
                 ]);
             }
+
+
         } elseif ($name == 'ssl_commerz_payment') {
             $payment = BusinessSetting::where('key', 'ssl_commerz_payment')->first();
             if (isset($payment) == false) {
@@ -333,6 +402,9 @@ class BusinessSettingsController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+
+
+
             } else {
                 DB::table('business_settings')->where(['key' => 'paypal'])->update([
                     'key'        => 'paypal',
@@ -514,6 +586,11 @@ class BusinessSettingsController extends Controller
                 'updated_at' => now()
             ]);
         }
+
+
+
+
+
 
         Toastr::success(translate('messages.payment_settings_updated'));
         return back();

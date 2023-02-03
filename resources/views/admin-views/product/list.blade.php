@@ -7,7 +7,8 @@
 @endpush
 
 @section('content')
-    <div class="content container-fluid">
+    <div class="content container-fluid" method="post">
+
         <!-- Page Header -->
         <div class="page-header">
             <div class="row align-items-center g-2">
@@ -79,7 +80,11 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1"></i>
+
+                            Options
+
+                            {{-- {{ translate('messages.export') }} --}}
                         </a>
 
                         <div id="usersExportDropdown"
@@ -118,6 +123,24 @@
                                     alt="Image Description">
                                 {{ translate('messages.pdf') }}
                             </a> --}}
+
+
+                            <a href="javascript:" id="bulk-delete" class="dropdown-item"
+                            onclick="form_alert('table-div','Are You Sure You Want To Delete Selected Item?')" title="{{translate('messages.delete')}} {{translate('messages.item')}}">
+                                Bulk Delete
+
+                            </a>
+
+
+                            {{-- <button
+
+                             formaction="">
+                                <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                    src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
+                                    alt="Image Description">
+                                Bulk Delete
+                            </button> --}}
+
                         </div>
                     </div>
                     <!-- Unfold -->
@@ -230,7 +253,8 @@
             <!-- End Header -->
 
             <!-- Table -->
-            <div class="table-responsive datatable-custom" id="table-div">
+            <form class="table-responsive datatable-custom" id="table-div" method="post" action="{{ route('admin.item.bulk-delete') }}">
+                @csrf
                 <table id="datatable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
                     data-hs-datatables-options='{
                         "columnDefs": [{
@@ -251,6 +275,10 @@
                     }'>
                     <thead class="thead-light">
                     <tr>
+                        <th>
+
+                            <x-check-all />
+                        </th>
                         <th class="border-0">{{translate('sl')}}</th>
                         <th class="border-0">{{translate('messages.name')}}</th>
                         <th class="border-0">{{translate('messages.category')}}</th>
@@ -262,8 +290,18 @@
                     </thead>
 
                     <tbody id="set-rows">
+
+
                     @foreach($items as $key=>$item)
                         <tr>
+                            <td>
+
+                                {{-- <input  type="checkbox" name="item_id[]"  value="{{ $item->id }}"> --}}
+
+                                <x-delete-check-box :item="$item" />
+
+
+                            </td>
                             <td>{{$key+$items->firstItem()}}</td>
                             <td>
                                 <a class="media align-items-center" href="{{route('admin.item.view',[$item['id']])}}">
@@ -301,6 +339,11 @@
                                     <a class="btn  action-btn btn--danger btn-outline-danger" href="javascript:"
                                         onclick="form_alert('food-{{$item['id']}}','{{translate('messages.Want_to_delete_this_item')}}')" title="{{translate('messages.delete')}} {{translate('messages.item')}}"><i class="tio-delete-outlined"></i>
                                     </a>
+
+
+                                   <x-clone-item :item="$item"/>
+                        </form>
+
                                     <form action="{{route('admin.item.delete',[$item['id']])}}"
                                             method="post" id="food-{{$item['id']}}">
                                         @csrf @method('delete')
@@ -326,7 +369,7 @@
                     </h5>
                 </div>
                 @endif
-            </div>
+            </form>
             <!-- End Table -->
         </div>
         <!-- End Card -->
