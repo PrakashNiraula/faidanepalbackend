@@ -295,6 +295,9 @@
                         @else
                             <th class="border-0">{{translate('messages.store')}}</th>
                         @endif
+
+                        <th class="border-0">Payment Method</th>
+
                         <th class="border-0">{{translate('messages.total')}} {{translate('messages.amount')}}</th>
                         <th class="text-center border-0">{{translate('messages.order')}} {{translate('messages.status')}}</th>
                         <th class="text-center border-0">{{translate('messages.actions')}}</th>
@@ -331,6 +334,9 @@
                                     <label class="badge badge-danger">{{translate('messages.invalid')}} {{translate('messages.customer')}} {{translate('messages.data')}}</label>
                                 @endif
                             </td>
+
+
+
                             @if ($parcel_order)
 
                             @endif
@@ -342,6 +348,18 @@
                                 @else
                                     <div>{{Str::limit(translate('messages.not_found'),20,'...')}}</div>
                                 @endif
+                            </td>
+
+                            <td>
+
+                                @if($order->payment_method == 'cash_on_delivery')
+                                    Cash On Delivery
+                                @else
+
+                                {{ $order->payment_method }}
+
+                                @endif
+
                             </td>
                             <td>
                                 <div class="text-right mw--85px">
