@@ -2,7 +2,7 @@
 
 
 href="javascript:"
-onclick="form_alert('clone-{{$item['id']}}','Are You Sure You Want To Duplicate Item?')"
+onclick="form_alert_get('clone-{{$item['id']}}','Are You Sure You Want To Duplicate Item?',`{{ route('admin.item.duplicate',$item['id']) }}`)"
 
 title="Duplicate Item">
 
@@ -12,6 +12,10 @@ title="Duplicate Item">
 </a>
 
 
+{{-- 
+<form action="{{}}"
+method="post" id="clone-{{$item['id']}}">
 
-<form action="{{route('admin.item.duplicate',$item['id'])}}"
-method="get" id="clone-{{$item['id']}}">
+Ram shyam hari
+@csrf
+</form> --}}

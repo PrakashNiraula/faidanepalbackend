@@ -342,7 +342,6 @@
 
 
                                    <x-clone-item :item="$item"/>
-                        </form>
 
                                     <form action="{{route('admin.item.delete',[$item['id']])}}"
                                             method="post" id="food-{{$item['id']}}">

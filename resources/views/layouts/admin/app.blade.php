@@ -311,6 +311,33 @@
         })
     }
 
+
+
+    // form alert get request
+
+
+    function form_alert_get(id, message,url) {
+        Swal.fire({
+            title: '{{ translate('messages.Are you sure?') }}',
+            text: message,
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonColor: 'default',
+            confirmButtonColor: '#FC6A57',
+            cancelButtonText: '{{ translate('messages.no') }}',
+            confirmButtonText: '{{ translate('messages.Yes') }}',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                // $('#'+id).submit()
+
+                window.location.href = url;
+
+            }
+        })
+    }
+
+
     function form_alert(id, message) {
         Swal.fire({
             title: '{{ translate('messages.Are you sure?') }}',

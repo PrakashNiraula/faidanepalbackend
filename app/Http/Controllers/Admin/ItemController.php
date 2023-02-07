@@ -766,7 +766,11 @@ class ItemController extends Controller
 
     // duplicate item
     public function duplicate($id){
-        $information = Item::findorfail($id)->replicate()->save();
+        $information = Item::findorfail($id)
+        // $item = new Item;
+        // $item = $information;
+        // $item->save();
+         ->replicate()->save();
         Toastr::success('Item Duplicated Successfully!!');
 
         return redirect()->back();
