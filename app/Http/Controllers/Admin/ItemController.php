@@ -18,7 +18,7 @@ use Rap2hpoutre\FastExcel\FastExcel;
 use Illuminate\Support\Facades\DB;
 use App\Scopes\StoreScope;
 use App\Models\Translation;
-
+// use Storage;
 class ItemController extends Controller
 {
     public function index()
@@ -766,11 +766,46 @@ class ItemController extends Controller
 
     // duplicate item
     public function duplicate($id){
-        $information = Item::findorfail($id)
+        $information = Item::findorfail($id);
         // $item = new Item;
         // $item = $information;
         // $item->save();
-         ->replicate()->save();
+         $copy =$information->replicate();
+        $image = date('ymdhis').$information->image;
+        // Storage::copy('app/public/product/'.$information->image, 'app/public/product/'.$image);
+        if(Storage::disk('local')->exists('app/public/product/'.$information->image)){
+
+            Storage::disk('local')->copy('app/public/product/'.$information->image,'app/public/product/'.$image);
+        }
+
+
+        //  copy images
+
+        $images = $information->images;
+        $img=[];
+        if(is_array($images)){
+            foreach($images as $image){
+                $im = date('ymdhis').$image;
+               if(Storage::disk('local')->exists('app/public/product/'.$image)){
+                Storage::disk('local')->copy('app/public/product/'.$image,'app/public/product/'.$im);
+
+                $img[]=$im;
+               }
+                // Storage::copy('app/public/product/'.$image,'app/public/product/'.$im);
+
+
+            }
+        }
+
+
+        $images = count($img)>0? json_encode($img):null;
+        $copy->image =$image;
+
+        $copy->images=$images;
+        $copy->save();
+
+
+
         Toastr::success('Item Duplicated Successfully!!');
 
         return redirect()->back();
