@@ -88,7 +88,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
                 Route::get('details', 'ConversationController@dm_messages');
                 Route::post('send', 'ConversationController@dm_messages_store');
             });
-        }); 
+        });
     });
 
     Route::group(['prefix' => 'vendor', 'namespace' => 'Vendor', 'middleware'=>['vendor.api']], function () {
@@ -186,6 +186,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
     });
 
     Route::group(['middleware'=>['module-check']], function(){
+
+
         Route::group(['prefix' => 'customer', 'middleware' => 'auth:api'], function () {
             Route::get('notifications', 'NotificationController@get_notifications');
             Route::get('info', 'CustomerController@info');
@@ -194,6 +196,11 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
             Route::post('update-interest', 'CustomerController@update_interest');
             Route::put('cm-firebase-token', 'CustomerController@update_cm_firebase_token');
             Route::get('suggested-items', 'CustomerController@get_suggested_item');
+
+
+            Route::post('order', 'CustomerController@order');
+
+
             //Remove account
             Route::delete('remove-account', 'CustomerController@remove_account');
 

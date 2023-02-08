@@ -1019,8 +1019,4 @@ class OrderController extends Controller
         return (new FastExcel(OrderLogic::format_export_data($orders, $type)))->download('Orders.xlsx');
     }
 
-
-    public function place_order(){
-        
-    }
 }

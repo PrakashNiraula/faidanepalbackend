@@ -93,7 +93,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
 
 
-            Route::delete('delete/{id}', 'ItemController@delete')->name('delete');
+            Route::get('delete/{id}', 'ItemController@delete')->name('delete');
             Route::get('status/{id}/{status}', 'ItemController@status')->name('status');
             Route::get('review-status/{id}/{status}', 'ItemController@reviews_status')->name('reviews.status');
             Route::post('search', 'ItemController@search')->name('search');

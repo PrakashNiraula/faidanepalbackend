@@ -39,16 +39,16 @@
                     href="{{route('admin.item.edit',[$item['id']])}}" title="{{translate('messages.edit')}} {{translate('messages.item')}}"><i class="tio-edit"></i>
                 </a>
                 <a class="btn  action-btn btn--danger btn-outline-danger" href="javascript:"
-                    onclick="form_alert('food-{{$item['id']}}','{{translate('messages.Want_to_delete_this_item')}}')" title="{{translate('messages.delete')}} {{translate('messages.item')}}"><i class="tio-delete-outlined"></i>
-                </a>
+                onclick="form_alert_get('food-{{$item['id']}}','{{translate('messages.Want_to_delete_this_item')}}',`{{route('admin.item.delete',[$item['id']])}}`)" title="{{translate('messages.delete')}} {{translate('messages.item')}}"><i class="tio-delete-outlined"></i>
+            </a>
 
 
                 <x-clone-item :item="$item"/>
 
-                <form action="{{route('admin.item.delete',[$item['id']])}}"
+                {{-- <form action="{{route('admin.item.delete',[$item['id']])}}"
                         method="post" id="food-{{$item['id']}}">
                     @csrf @method('delete')
-                </form>
+                </form> --}}
             </div>
         </td>
     </tr>
