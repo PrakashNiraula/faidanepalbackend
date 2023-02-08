@@ -54,7 +54,7 @@ class OrderController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'order_amount' => 'required',
-            'payment_method' => 'required|in:cash_on_delivery,digital_payment,wallet',
+            'payment_method' => 'required|in:cash_on_delivery,esewa,khalti,wallet',
             'order_type' => 'required|in:take_away,delivery,parcel',
             'store_id' => 'required_unless:order_type,parcel',
             'distance' => 'required_unless:order_type,take_away',
@@ -203,8 +203,32 @@ class OrderController extends Controller
         }
         $order->user_id = $request->user()->id;
         $order->order_amount = $request['order_amount'];
-        $order->payment_status = $request['payment_method']=='wallet'?'paid':'unpaid';
+
+
+        if($request['esewaresult'] || $request['khaltiresult']){
+            $order->payment_status = 'paid';
+
+
+            if($request['esewaresult']){
+                $order->payment_response = $request['esewaresult'];
+            }
+
+
+            if($request['khaltiresult']){
+                $order->payment_response = $request['khaltiresult'];
+            }
+
+
+        }else{
+            $order->payment_status = 'unpaid';
+        }
+
+        // = $request['payment_method']=='esw'?'paid':'unpaid';
+
+
         $order->order_status = $request['payment_method']=='digital_payment'?'failed':($request->payment_method == 'wallet'?'confirmed':'pending');
+
+
         $order->coupon_code = $request['coupon_code'];
         $order->payment_method = $request->payment_method;
         $order->transaction_reference = null;
@@ -685,81 +709,81 @@ class OrderController extends Controller
     }
 
 
-    public function place_order(Request $request){
-        // customer order
+//     public function place_order(Request $request){
+//         // customer order
 
 
 
-           $information = new Order();
+//            $information = new Order();
 
-           $information->user_id = auth('api')->user_id;
-           $information->order_amount = $request->orderAmount;
-           $information->payment_method = $request->paymentMethod;
+//            $information->user_id = auth('api')->user_id;
+//            $information->order_amount = $request->orderAmount;
+//            $information->payment_method = $request->paymentMethod;
 
-           $information->coupon_discount_amount = $request->couponDiscountAmount;
+//            $information->coupon_discount_amount = $request->couponDiscountAmount;
 
-           if($request->_esewa_result || $request->_khalti_result){
-               $information->payment_status = 'paid';
-           }else{
-               $information->payment_status = 'unpaid';
+//            if($request->_esewa_result || $request->_khalti_result){
+//                $information->payment_status = 'paid';
+//            }else{
+//                $information->payment_status = 'unpaid';
 
-           }
-
-
-           $information->order_amount = $request->orderAmount;
-
-           $information->order_status = $request->orderStatus;
-           $information->total_tax_amount = $request->totalTaxAmount;
-           $information->transaction_reference = $request->transactionReference;
-           $information->delivery_address_id = $request->deliveryAddressId;
-           $information->delivery_man_id = $request->deliveryManId;
-           $information->coupon_code = $request->couponCode;
-           $information->order_note = $request->orderNote;
-           $information->checked = $request->checked;
-           $information->store_id = $request->store_id;
-           $information->delivery_charge = $request->deliveryCharge;
-           $information->schedule_at = $request->scheduleAt;
-           $information->callback = $request->callback;
-           $information->otp = $request->otp;
-           $information->order_type = $request->orderType;
-           $information->refund_requested = $request->refundRequested;
-           $information->refunded = $request->refunded;
-           $information->delivery_address = $request->deliveryAddress;
-           $information->scheduled = $request->scheduled;
-           $information->store_discount_amount = $request->storeDiscountAmount;
-           $information->original_delivery_charge = $request->originalDeliveryCharge;
-
-           $information->failed = $request->failed;
-           $information->adjusment = $request->adjustment;
-           $information->delivery_time = $request->deliveryTime;
-           $information->zone_id = $request->zoneId;
-           $information->module_id = $request->moduleId;
-           $information->order_attachment = $request->orderAttachment;
-           $information->parcel_category_id = $request->parcelCategoryId;
-           $information->receiver_details = $request->receiverDetails;
-           $information->charge_payer = $request->chargePaymer;
-           $information->distance = $request->distance;
-           $information->dm_tips = $request->dmTips;
-           $information->free_delivery_by = $request->freeDeliveryBy;
+//            }
 
 
-           if($request->esewaresult){
-               $information->payment_response = $request->esewaresult;
+//            $information->order_amount = $request->orderAmount;
 
-           }
+//            $information->order_status = $request->orderStatus;
+//            $information->total_tax_amount = $request->totalTaxAmount;
+//            $information->transaction_reference = $request->transactionReference;
+//            $information->delivery_address_id = $request->deliveryAddressId;
+//            $information->delivery_man_id = $request->deliveryManId;
+//            $information->coupon_code = $request->couponCode;
+//            $information->order_note = $request->orderNote;
+//            $information->checked = $request->checked;
+//            $information->store_id = $request->store_id;
+//            $information->delivery_charge = $request->deliveryCharge;
+//            $information->schedule_at = $request->scheduleAt;
+//            $information->callback = $request->callback;
+//            $information->otp = $request->otp;
+//            $information->order_type = $request->orderType;
+//            $information->refund_requested = $request->refundRequested;
+//            $information->refunded = $request->refunded;
+//            $information->delivery_address = $request->deliveryAddress;
+//            $information->scheduled = $request->scheduled;
+//            $information->store_discount_amount = $request->storeDiscountAmount;
+//            $information->original_delivery_charge = $request->originalDeliveryCharge;
 
-           if($request->khaltiresult){
-               $information->payment_response = $request->khaltiresult;
+//            $information->failed = $request->failed;
+//            $information->adjusment = $request->adjustment;
+//            $information->delivery_time = $request->deliveryTime;
+//            $information->zone_id = $request->zoneId;
+//            $information->module_id = $request->moduleId;
+//            $information->order_attachment = $request->orderAttachment;
+//            $information->parcel_category_id = $request->parcelCategoryId;
+//            $information->receiver_details = $request->receiverDetails;
+//            $information->charge_payer = $request->chargePaymer;
+//            $information->distance = $request->distance;
+//            $information->dm_tips = $request->dmTips;
+//            $information->free_delivery_by = $request->freeDeliveryBy;
 
-           }
 
-           $information->save();
+//            if($request->esewaresult){
+//                $information->payment_response = $request->esewaresult;
 
+//            }
 
+//            if($request->khaltiresult){
+//                $information->payment_response = $request->khaltiresult;
 
-           return response()->json(['status'=>'success','message'=>'Order Placed Successfully!!']);
+//            }
+
+//            $information->save();
 
 
 
-}
+//            return response()->json(['status'=>'success','message'=>'Order Placed Successfully!!']);
+
+
+
+// }
 }
