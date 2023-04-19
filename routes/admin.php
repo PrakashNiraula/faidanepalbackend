@@ -1,9 +1,45 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 
+
+
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
+
+
+    Route::get('calculate-interest',function(){
+
+        $user = User::where('id',5)->first();
+
+
+        $interest= \App\Models\BusinessSetting::where('key', 'interest')->first();
+        
+
+        if($interest){
+            $interest_rate = $interest->value/100;
+        }else{
+            $interest_rate =5/100;
+        }
+
+        // return $interest_rate;
+
+        $updated_date = date('Y-m-d',strtotime($user->updated_at));
+    
+        $current_date = date('Y-m-d');
+    
+    
+        $days_between = ceil(abs(strtotime($updated_date) - strtotime($current_date)) / 86400);
+    
+        $wallet_balance = (($user->wallet_balance * $interest_rate)/365) * $days_between;
+
+
+      return round($wallet_balance, 2);
+        // $per_day = 
+
+    });
+    
     /*authentication*/
     Route::group(['namespace' => 'Auth', 'prefix' => 'auth', 'as' => 'auth.'], function () {
         Route::get('login', 'LoginController@login')->name('login');
@@ -418,11 +454,15 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         // Subscribed customer Routes
         Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
 
+            Route::get('add-interest', 'CustomerWalletController@addInterest')->name('add-interest');
+
 
             Route::group(['prefix' => 'wallet', 'as' => 'wallet.', 'middleware' => ['module:customer_wallet']], function () {
                 Route::get('add-fund', 'CustomerWalletController@add_fund_view')->name('add-fund');
                 Route::post('add-fund', 'CustomerWalletController@add_fund');
                 Route::get('report', 'CustomerWalletController@report')->name('report');
+            
+                
             });
 
             Route::group(['middleware' => ['module:customerList']], function () {

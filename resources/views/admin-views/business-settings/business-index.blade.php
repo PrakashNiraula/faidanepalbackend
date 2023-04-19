@@ -72,6 +72,18 @@
                                             class="form-control" placeholder="" required>
                                     </div>
                                 </div>
+
+
+                                @php($interest = \App\Models\BusinessSetting::where('key', 'interest')->first())
+                                <div class="col-md-4">
+                                    <div class="form-group mb-0">
+                                        <label class="form-label"
+                                            for="exampleFormControlInput1">Interest</label>
+                                        <input type="number" value="{{ $interest->value ?? '' }}" name="interest"
+                                            class="form-control" placeholder="" required>
+                                    </div>
+                                </div>
+
                                 @php($email = \App\Models\BusinessSetting::where('key', 'email_address')->first())
                                 <div class="col-md-4">
                                     <div class="form-group mb-0">

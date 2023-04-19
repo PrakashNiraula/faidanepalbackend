@@ -1,7 +1,46 @@
 <?php
 
 use App\CentralLogics\Helpers;
+use App\Models\User;
 use Illuminate\Support\Facades\App;
+
+
+function calculateInterest($user_id){
+    
+    $user = User::where('id',$user_id)->first();
+
+
+    $interest= \App\Models\BusinessSetting::where('key', 'interest')->first();
+    
+
+    if($interest){
+        $interest_rate = $interest->value/100;
+    }else{
+        $interest_rate =5/100;
+    }
+
+    // return $interest_rate;
+
+    if($user->interest_date){
+        $updated_at = $user->interest_date;
+
+    }else{
+        $updated_at = $user->updated_at;
+    }
+
+    $updated_date = date('Y-m-d',strtotime($updated_at));
+
+    $current_date = date('Y-m-d');
+
+
+    $days_between = ceil(abs(strtotime($updated_date) - strtotime($current_date)) / 86400);
+
+    $wallet_balance = (($user->wallet_balance * $interest_rate)/365) * $days_between;
+
+
+  return round($wallet_balance, 2);
+
+}
 
 if (! function_exists('translate')) {
     function translate($key, $replace = [])

@@ -36,6 +36,11 @@ class BusinessSettingsController extends Controller
             'value' => $request['timezone']
         ]);
 
+        DB::table('business_settings')->updateOrInsert(['key' => 'interest'], [
+            'value' => $request['interest']
+        ]);
+
+
         $curr_logo = BusinessSetting::where(['key' => 'logo'])->first();
         if ($request->has('logo')) {
             $image_name = Helpers::update('business/', $curr_logo->value, 'png', $request->file('logo'));

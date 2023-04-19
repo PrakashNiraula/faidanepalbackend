@@ -6,6 +6,7 @@ use App\CentralLogics\CustomerLogic;
 use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessSetting;
+use App\Models\User;
 use App\Models\WalletTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -15,6 +16,25 @@ use Illuminate\Support\Facades\Mail;
 
 class CustomerWalletController extends Controller
 {
+    public function addInterest(){
+
+        $users = User::where('wallet_balance','!=',0)->get();
+
+
+        foreach ($users as $key => $value) {
+            $interest = calculateInterest($value->id);
+            $date = date('Y-m-d');
+
+            $amount = $value->wallet_balance+$interest;
+
+            $value->wallet_balance = $amount;
+            $value->interest_date = $date;
+            $value->save();
+        }
+
+        return redirect()->back();
+
+    }
     public function add_fund_view()
     {
         if (BusinessSetting::where('key', 'wallet_status')->first()->value != 1) {

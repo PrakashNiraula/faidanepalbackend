@@ -41,6 +41,8 @@
                         <!-- End Search -->
                     </form>
                     <!-- Unfold -->
+
+                    <a href="{{ route('admin.customer.add-interest') }}">Add Interest</a>
                     <div class="hs-unfold mr-2">
                         <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle min-height-40" href="javascript:;"
                             data-hs-unfold-options='{
@@ -213,6 +215,8 @@
                                 </th>
                                 <th class="table-column-pl-0 border-0">{{ translate('messages.name') }}</th>
                                 <th class="border-0">{{ translate('messages.contact_information') }}</th>
+                                <th class="border-0">Wallet Balance</th>
+                                <th class="border-0">Interest</th>
                                 <th class="border-0">{{ translate('messages.total') }} {{ translate('messages.order') }}</th>
                                 <th class="border-0">{{ translate('messages.active') }}/{{ translate('messages.inactive') }}</th>
                                 <th class="border-0">{{ translate('messages.actions') }}</th>
@@ -238,6 +242,19 @@
                                             {{ $customer['phone'] }}
                                         </div>
                                     </td>
+                                    <td>
+                                        <label class="badge">
+                                            {{ $customer->wallet_balance }}
+                                        </label>
+                                    </td>
+
+
+                                    <td>
+                                        <label class="badge">
+                                            {{ calculateInterest($customer->id)}}
+                                        </label>
+                                    </td>
+
                                     <td>
                                         <label class="badge">
                                             {{ $customer->order_count }}

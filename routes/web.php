@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/migrate', function(){
+    \Artisan::call('migrate');
+});
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('terms-and-conditions', 'HomeController@terms_and_conditions')->name('terms-and-conditions');

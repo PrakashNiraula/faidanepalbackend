@@ -141,6 +141,7 @@ class OrderController extends Controller
                     ], 401);
                 }
             }
+
             $per_km_shipping_charge = (float)BusinessSetting::where(['key' => 'per_km_shipping_charge'])->first()->value;
             $minimum_shipping_charge = (float)BusinessSetting::where(['key' => 'minimum_shipping_charge'])->first()->value;
             $original_delivery_charge = ($request->distance * $per_km_shipping_charge > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge : $minimum_shipping_charge;
@@ -190,6 +191,7 @@ class OrderController extends Controller
             'latitude' => (string)$request->latitude,
         ];
 
+        
         $total_addon_price = 0;
         $product_price = 0;
         $store_discount_amount = 0;
@@ -206,6 +208,7 @@ class OrderController extends Controller
 
 
         if($request['esewaresult'] || $request['khaltiresult']){
+            
             $order->payment_status = 'paid';
 
 
